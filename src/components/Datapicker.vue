@@ -15,9 +15,9 @@
             <p class="text-[grey] text-center text-[10px]" v-for="(weekName, index) in weekNames" :key="index">
             {{ weekName }}
             </p>
-            <div v-for="(data, index) in daysInMonth" :key="index">
+            <div v-for="(date, index) in arrayDays" :key="index">
                 <p class="text-[grey] text-center text-[10px]">
-                {{ data }}
+                {{ date.day }}
                 </p>
             </div>
         </div>
@@ -33,31 +33,44 @@
     "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
     ]
     });
-    const weekNames:String[] = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс',]
+    const weekNames:String[] = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
     const count = ref(0)
+    const arrayDays = ref()
     const date = ref(moment().format('MMMM YYYY'))
-    console.log(date.value);
+    const dateTwo = ref(moment().format('MM YYYY'))
+    let splited:String[] = date.value.split(' ')
+    let splitedTwo = dateTwo.value.split(' ')
+    const daysInMonth = ref(moment(`${splited[0]}-${splited[1]}`, "MMMM-YYYY").daysInMonth())
+    createDays(daysInMonth.value, splitedTwo[0], +splitedTwo[1])
     
     watch(count, (newValue) => {
-        date.value = moment().add(newValue, 'month').format("MMMM YYYY")
-    })
-    let splited = date.value.split(' ')
-    const daysInMonth = ref(moment(`${splited[0]}-${splited[1]}`, "MMMM-YYYY").daysInMonth())
-    console.log(daysInMonth.value);
-    
-    
-    watch(date, (newValue) => {
-        splited = newValue.split(' ')
+        let newDate = date.value = moment().add(newValue, 'month').format("MMMM YYYY")
+        let newDateTwo = dateTwo.value = moment().add(newValue, 'month').format("MM YYYY")
+        splited = newDate.split(' ')
+        splitedTwo = newDateTwo.split(' ')
         daysInMonth.value = moment(`${splited[0]}-${splited[1]}`, "MMMM-YYYY").daysInMonth()
-        console.log(daysInMonth.value);
+        createDays(daysInMonth.value, splitedTwo[0], +splitedTwo[1])
     })
-    
     
     const incrementMonth = () => {
         count.value++
     }
     const decrementMonth = () => {
         count.value--
+    }
+    function createDays (days:number, month: string, year: number) {
+        let arr = []
+        for(let i = 1; i <= days; i++) {
+            let getWeek = moment(`${year}-${month}-${i}`)
+            let dayOfWeek = getWeek.format('dddd');
+            let obj = {
+                day: i,
+                isActive: false,
+                week: dayOfWeek
+            }
+            arr.push(obj)
+        }
+        arrayDays.value = arr
     }
 </script>
 
