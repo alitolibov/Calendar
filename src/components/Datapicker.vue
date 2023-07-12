@@ -11,12 +11,12 @@
         </button>
         </div>
         </div>
-        <div class="grid grid-cols-7 gap-[3px]" >
+        <div class="grid grid-cols-7">
             <p class="text-[grey] text-center text-[10px]" v-for="(weekName, index) in weekNames" :key="index">
             {{ weekName }}
             </p>
-            <div v-for="(date, index) in arrayDays" :key="index">
-                <p class="text-[grey] text-center text-[10px]">
+            <div class="max-w-[20px] p-[2px] text-[grey]" :class="activeButtonIndex === index ? 'text-[#fff] rounded-full duration-300 bg-blue-400' : ''" @click="setActiveButton(index)" v-for="(date, index) in arrayDays" :key="index">
+                <p class="text-center text-[10px]">
                 {{ date.day }}
                 </p>
             </div>
@@ -36,6 +36,7 @@
     const weekNames:String[] = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
     const count = ref(0)
     const arrayDays = ref()
+    const activeButtonIndex = ref();
     const date = ref(moment().format('MMMM YYYY'))
     const dateTwo = ref(moment().format('MM YYYY'))
     let splited:String[] = date.value.split(' ')
@@ -49,6 +50,7 @@
         splited = newDate.split(' ')
         splitedTwo = newDateTwo.split(' ')
         daysInMonth.value = moment(`${splited[0]}-${splited[1]}`, "MMMM-YYYY").daysInMonth()
+        activeButtonIndex.value = null
         createDays(daysInMonth.value, splitedTwo[0], +splitedTwo[1])
     })
     
@@ -72,6 +74,10 @@
         }
         arrayDays.value = arr
     }
+
+    const setActiveButton = (index:number) => {
+      activeButtonIndex.value = index;
+    };
 </script>
 
 <style lang="scss" scoped>
