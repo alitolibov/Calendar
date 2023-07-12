@@ -1,5 +1,5 @@
 <template>
-    <div class="aspect-[1/2] space-y-[10px]">
+    <div class="bg-white aspect-[1/2] space-y-[10px] absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]">
         <div class="flex items-center justify-between">
             <p class="text-[var(--main-color)] text-[11.5px] font-semibold">{{ date }}</p>
             <div class="flex items-center gap-x-[20%]">
@@ -12,7 +12,7 @@
         </div>
         </div>
         <div class="grid grid-cols-7">
-            <p class="text-[grey] text-center text-[10px]" v-for="(weekName, index) in weekNames" :key="index">
+            <p class="w-fit text-[grey] text-center text-[10px]" v-for="(weekName, index) in weekNames" :key="index">
             {{ weekName }}
             </p>
             <div class="max-w-[20px] p-[2px] text-[grey]" :class="activeButtonIndex === index ? 'text-[#fff] rounded-full duration-300 bg-blue-400' : ''" @click="setActiveButton(index)" v-for="(date, index) in arrayDays" :key="index">
@@ -27,20 +27,16 @@
 <script setup lang="ts">
     import moment from 'moment';
     import { ref, watch } from 'vue'
-    moment.updateLocale('ru', {
-    months : [
-    "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль",
-    "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
-    ]
-    });
-    const weekNames:String[] = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
-    const count = ref(0)
-    const arrayDays = ref()
-    const activeButtonIndex = ref();
-    const date = ref(moment().format('MMMM YYYY'))
-    const dateTwo = ref(moment().format('MM YYYY'))
+    const weekNames:String[] = ['Sun', 'Mon', 'Tue', 'Wen', 'Thu', 'Fri', 'San'],
+    count = ref(0),
+    arrayDays = ref(),
+    activeButtonIndex = ref(),
+    date = ref(moment().format('MMMM YYYY')),
+    dateTwo = ref(moment().format('MM YYYY'));
     let splited:String[] = date.value.split(' ')
     let splitedTwo = dateTwo.value.split(' ')
+    console.log(date.value);
+    
     const daysInMonth = ref(moment(`${splited[0]}-${splited[1]}`, "MMMM-YYYY").daysInMonth())
     createDays(daysInMonth.value, splitedTwo[0], +splitedTwo[1])
     
