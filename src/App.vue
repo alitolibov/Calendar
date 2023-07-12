@@ -2,7 +2,7 @@
   <div>
     <Header></Header>
     <main class="px-[8px] flex justify-between">
-      <div class="w-[35%] my-[20px]">
+      <div class="w-[37%] my-[20px]">
         <DataPicker></DataPicker>
       </div>
     </main>

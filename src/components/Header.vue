@@ -11,7 +11,7 @@
             <p class="text-[var(--main-color)] text-[13px]">Июль  <span>2023</span></p>
         </div>
         <select v-model="selected" class="text-[var(--main-color)] text-[13px] p-[5px]">
-            <option v-for="(opt, index) in optionsArr" :key="index" :value="opt.value">
+            <option v-for="(opt, index) in selectOptionsArr" :key="index" :value="opt.value">
             {{ opt.desc }}
             </option>
         </select>
@@ -20,31 +20,11 @@
 
 <script setup lang="ts">
 import {ref} from 'vue';
+import {optionsArr} from '../mocks/optionsHeader'
 
-const optionsArr = ref([
-    {
-        value: 'day',
-        desc: 'День'
-    }, {
-        value: 'four',
-        desc: '4 дня'
-    }, {
-        value: 'week',
-        desc: 'Неделя'
-    }, {
-        value: 'month',
-        desc: 'Месяц'
-    }, {
-        value: 'year',
-        desc: 'Год'
-    }
-])
+const selectOptionsArr = ref(optionsArr)
+
 const selected = ref('week')
-
-
-
-
-
 </script>
 
 <style lang="scss" scoped>
