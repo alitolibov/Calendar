@@ -6,7 +6,7 @@ export default createStore({
         isOpen: false
     },
     mutations: {
-        toggle() {
+        toggle(state) {
             state.isOpen = !state.isOpen
         }
     }

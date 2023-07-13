@@ -11,11 +11,6 @@
   import Header from './components/Header.vue';
   import DataPicker from './components/Datapicker.vue';
   import ModalPicker from './components/ModalPicker.vue';
-  import { ref } from 'vue';
-
-  const modalToggle = ref(false)
-  
-
 </script>
 
 <style lang="scss" scoped>

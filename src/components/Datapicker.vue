@@ -16,14 +16,14 @@
             <p class="w-fit text-[grey] text-center text-[11px]" v-for="(weekName, index) in weekNames" :key="index">
             {{ weekName }}
             </p>
-            <div class="max-w-[20px] p-[2px] text-[grey]" :class="activeButtonIndex === index ? 'text-[#fff] rounded-full duration-300 bg-blue-400' : ''" @click="setActiveButton(index)" v-for="(date, index) in arrayDays" :key="index">
+            <div class="max-w-[20px] p-[2px] duration-200" :class="activeButtonIndex === index ? 'text-[#fff] rounded-full bg-blue-400' : 'text-[grey]'" @click="setActiveButton(index)" v-for="(date, index) in arrayDays" :key="index">
                 <p class="text-center text-[11px]">
                 {{ date.day }}
                 </p>
             </div>
         </div>
                 <div class="flex items-center justify-between absolute bottom-0 w-full">
-                    <button class="rounded-[10px] text-[14px] px-[15px] py-[5px] bg-blue-400 text-white">Close</button>
+                    <button @click="closeModal" class="rounded-[10px] text-[14px] px-[15px] py-[5px] bg-blue-400 text-white">Close</button>
                     <button class="rounded-[10px] text-[14px] px-[15px] py-[5px] bg-blue-400 text-white">Select</button>
                 </div>
             </div>
@@ -32,9 +32,11 @@
 
 <script setup lang="ts">
     import moment from 'moment';
-    import { useStore } from 'vuex';
     import { ref, watch } from 'vue'
+    import { useStore } from 'vuex';
+
     const weekNames:String[] = ['Sun', 'Mon', 'Tue', 'Wen', 'Thu', 'Fri', 'San'],
+    store = useStore(),
     count = ref(0),
     arrayDays = ref(),
     activeButtonIndex = ref(),
@@ -56,11 +58,7 @@
         activeButtonIndex.value = null
         createDays(daysInMonth.value, splitedTwo[0], +splitedTwo[1])
     })
-    
-    const store = useStore();
-    console.log(store.state.isOpen);
-    
-
+        
     const incrementMonth = () => {
         count.value++
     }
@@ -85,6 +83,11 @@
     const setActiveButton = (index:number) => {
       activeButtonIndex.value = index;
     };
+
+    const closeModal = () => {
+    store.commit('toggle')
+    }
+
 </script>
 
 <style lang="scss" scoped>
