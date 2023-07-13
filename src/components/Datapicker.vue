@@ -11,11 +11,11 @@
         </button>
         </div>
         </div>
-        <div class="grid grid-cols-7">
+        <div class="grid grid-cols-7 gap-y-[4px]">
             <p class="w-fit text-[grey] text-center text-[11px]" v-for="(weekName, index) in weekNames" :key="index">
             {{ weekName }}
             </p>
-            <div class="max-w-[20px] p-[2px] duration-200" :class="activeButtonIndex === index ? 'text-[#fff] rounded-full bg-blue-400' : 'text-[grey]'" @click="date.day !== '' ? setActiveButton(date, index) : null" v-for="(date, index) in arrayDays" :key="index">
+            <div class="max-w-[20px] p-[2px] duration-200 rounded-full" :style="selectedDay.index === index ? {background: 'rgb(96 165 250 / 0.5', color: 'white'} : ''" :class="{'text-white bg-blue-400': date.isActive}"  @click="date.day !== '' ? setActiveButton(date, index) : null" v-for="(date, index) in arrayDays" :key="index">
                 <p class="text-center text-[11px]">
                 {{ date.day }}
                 </p>
@@ -26,18 +26,17 @@
 
 <script setup lang="ts">    
     import moment from 'moment';
-    import { ref, watch } from 'vue'
+    import { reactive, ref, watch } from 'vue'
     import { useStore } from 'vuex';
     
     const weekNames:String[] = ['Sun', 'Mon', 'Tue', 'Wen', 'Thu', 'Fri', 'San'],
     store = useStore(),
     arrayDays = ref(),
-    activeButtonIndex:any = ref(moment().date()),
     date = ref(store.state.date),
     todayDate = moment().date(),
-    selectedDay = ref(),
     today = ref(),
     dateTwo = ref(moment().format('MM YYYY'));
+    let selectedDay = ref({})
     let splited:String[] = date.value.split(' ')
     let splitedTwo = dateTwo.value.split(' ')
     
@@ -49,14 +48,9 @@
     watch(() => store.state.count, (newValue) => {
         let newDateTwo = dateTwo.value = moment().add(newValue, 'month').format("MM YYYY")
         splited = date.value.split(' ')
-        selectedDay.value = null
+        selectedDay.value = {}
         splitedTwo = newDateTwo.split(' ')
         daysInMonth.value = moment(`${splited[0]}-${splited[1]}`, "MMMM-YYYY").daysInMonth()
-        if(moment().month() !== +splitedTwo[0] - 1) {
-            activeButtonIndex.value = null
-        } else {
-            activeButtonIndex.value = todayDate
-        }
         createDays(daysInMonth.value, splitedTwo[0], +splitedTwo[1])
     })
 
@@ -70,13 +64,9 @@
                 year: year,
                 month: month,
                 day: i,
-                isActive: false,
+                isActive: moment().month() === +splitedTwo[0] - 1 && todayDate === i ? true : false,
                 week: dayOfWeek
             }
-            if(activeButtonIndex.value === i) {
-                selectedDay.value = obj
-                today.value = obj
-            } 
             arr.push(obj)
         }
 
@@ -86,29 +76,23 @@
             let obj = {
                 day: ''
             }
-            if(moment().month() === +splitedTwo[0] - 1) {
-                activeButtonIndex.value++
-                console.log(+splitedTwo[0] - 1, activeButtonIndex.value);
-            }
             arr.unshift(obj)
         }
         arrayDays.value = arr
-        // console.log(splitedTwo[0] - 1, moment().month());
-        
     }
 
     const setActiveButton = (date:object, index:number) => {
-      activeButtonIndex.value = index;
-      selectedDay.value = date
+        selectedDay.value = Object.assign(date, {index})
     };
 
     const returnToday = () => { 
-        activeButtonIndex.value = moment().date() - 1
-        selectedDay.value = today.value
+        // activeButtonIndex.value = moment().date() - 1
+        // selectedDay.value = today.value
     }
     
+    console.log(selectedDay.value);
     
-</script>
+    </script>
 
 <style lang="scss" scoped>
 

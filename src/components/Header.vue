@@ -1,7 +1,7 @@
 <template>
     <header class="h-[54px] border-b px-[8px] flex items-center justify-between">
       <button class="border text-[var(--main-color)] rounded-sm p-[5px] text-[13px]">Сегодня</button>
-      <div class="flex items-center gap-x-[5px]">
+      <div class="flex items-center gap-x-[10px]">
         <button class="rounded-full" @click="store.commit('decrement')">
           <img src="https://cdn4.iconfinder.com/data/icons/developer-set-3/128/left-1024.png" width="15" class="object-center" alt="">
         </button>

@@ -6,11 +6,17 @@ export default {
   ],
   theme: {
     extend: {
-    sm: '425px',
-    md: '768px',
-    lg: '1024px',
-    xl: '1200px',
-    xxl: '1440px'},
+      screens: {
+        sm: '425px',
+        md: '768px',
+        lg: '1024px',
+        xl: '1200px',
+        xxl: '1440px'
+      },
+      gridTemplateColumns: {
+        'seven': 'repeat(7, 30px)'
+      },
+    },
   },
   plugins: [],
 }
