@@ -16,15 +16,15 @@
             <p class="w-fit text-[grey] text-center text-[11px]" v-for="(weekName, index) in weekNames" :key="index">
             {{ weekName }}
             </p>
-            <div class="max-w-[20px] p-[2px] duration-200" :class="activeButtonIndex === index ? 'text-[#fff] rounded-full bg-blue-400' : 'text-[grey]'" @click="setActiveButton(index)" v-for="(date, index) in arrayDays" :key="index">
+            <div class="max-w-[20px] p-[2px] duration-200" :class="activeButtonIndex === index ? 'text-[#fff] rounded-full bg-blue-400' : 'text-[grey]'" @click="setActiveButton(date, index)" v-for="(date, index) in arrayDays" :key="index">
                 <p class="text-center text-[11px]">
                 {{ date.day }}
                 </p>
             </div>
         </div>
                 <div class="flex items-center justify-between absolute bottom-0 w-full">
-                    <button @click="closeModal" class="rounded-[10px] text-[14px] px-[15px] py-[5px] bg-blue-400 text-white">Close</button>
-                    <button class="rounded-[10px] text-[14px] px-[15px] py-[5px] bg-blue-400 text-white">Select</button>
+                    <button @click="closeModal" class="rounded-[10px] text-[14px] px-[15px] py-[5px] bg-red-400 text-white">Close</button>
+                    <button :disabled="!selectedDay" :class="!selectedDay ? 'bg-gray-400' : 'bg-blue-400'" class="rounded-[10px] text-[14px] px-[15px] py-[5px] bg-blue-400 text-white">Select</button>
                 </div>
             </div>
     </div>
@@ -39,12 +39,13 @@
     store = useStore(),
     count = ref(0),
     arrayDays = ref(),
-    activeButtonIndex = ref(),
+    activeButtonIndex = ref(moment().date() - 1),
+    selectedDay = ref(null),
     date = ref(moment().format('MMMM YYYY')),
     dateTwo = ref(moment().format('MM YYYY'));
     let splited:String[] = date.value.split(' ')
     let splitedTwo = dateTwo.value.split(' ')
-    console.log(date.value);
+    console.log(activeButtonIndex.value);
     
     const daysInMonth = ref(moment(`${splited[0]}-${splited[1]}`, "MMMM-YYYY").daysInMonth())
     createDays(daysInMonth.value, splitedTwo[0], +splitedTwo[1])
@@ -53,6 +54,7 @@
         let newDate = date.value = moment().add(newValue, 'month').format("MMMM YYYY")
         let newDateTwo = dateTwo.value = moment().add(newValue, 'month').format("MM YYYY")
         splited = newDate.split(' ')
+        selectedDay.value = null
         splitedTwo = newDateTwo.split(' ')
         daysInMonth.value = moment(`${splited[0]}-${splited[1]}`, "MMMM-YYYY").daysInMonth()
         activeButtonIndex.value = null
@@ -71,21 +73,28 @@
             let getWeek = moment(`${year}-${month}-${i}`)
             let dayOfWeek = getWeek.format('dddd');
             let obj = {
+                year: year,
+                month: month,
                 day: i,
                 isActive: false,
                 week: dayOfWeek
             }
+            activeButtonIndex.value === i ? selectedDay.value = obj : null
             arr.push(obj)
         }
         arrayDays.value = arr
     }
 
-    const setActiveButton = (index:number) => {
+    const setActiveButton = (date:any, index:number) => {
       activeButtonIndex.value = index;
+      selectedDay.value = date
+      console.log(selectedDay.value);
     };
 
     const closeModal = () => {
-    store.commit('toggle')
+        store.commit('toggle')
+        selectedDay.value = null
+        activeButtonIndex.value = null
     }
 
 </script>
