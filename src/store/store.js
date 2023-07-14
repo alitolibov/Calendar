@@ -8,12 +8,11 @@ export default createStore({
         date: moment().format('MMMM-YYYY'),
         selectedDay: {
             day: Number,
-            index: Number,
             isActive: Boolean,
             month: String,
             week: String,
             year: Number},
-        isTrue: false
+        isTrue: false,
     },
     mutations: {
         increment(state) {
@@ -53,6 +52,14 @@ export default createStore({
         },
         isTrue(state) {
             state.isTrue = true
+        },
+        returnToday(state) {
+            state.date = moment().format('MMMM-YYYY')
+            let split = moment().format('MMMM-YYYY-DD-d').split('-')
+            state.selectedDay.year = +split[1]
+            state.selectedDay.month = split[0]
+            state.selectedDay.day = +split[2]
+            state.selectedDay.week = +split[3]
         }
     }
 })

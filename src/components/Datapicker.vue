@@ -32,7 +32,6 @@
     const weekNames:String[] = ['Sun', 'Mon', 'Tue', 'Wen', 'Thu', 'Fri', 'San'],
     store = useStore(),
     arrayDays = ref(),
-    date = ref(store.state.date),
     todayDate = moment().date(),
     dateTwo = ref(moment().format('MM YYYY'));
     let splitedTwo = dateTwo.value.split(' ')
@@ -97,6 +96,10 @@
         } else if (store.state.selectedDay.year < +splitedTwo[1]) {
             dateTwo.value = moment().subtract(1, 'year').format("MM YYYY")
             store.commit('decrement')
+        }        
+        
+        if(store.state.selectedDay.year === moment().year() && newValue === moment().format('MMMM') && store.state.selectedDay.day, moment().date()) {
+             dateTwo.value = moment().format('MM YYYY')
         }
         
     })
