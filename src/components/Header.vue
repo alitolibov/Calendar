@@ -2,10 +2,10 @@
     <header class="h-[54px] border-b px-[8px] flex items-center justify-between">
       <button class="border text-[var(--main-color)] rounded-sm p-[5px] text-[13px]">Сегодня</button>
       <div class="flex items-center gap-x-[10px]">
-        <button class="rounded-full" @click="store.commit('decrement')">
+        <button class="rounded-full" @click="store.commit('decrementWeek')">
           <img src="https://cdn4.iconfinder.com/data/icons/developer-set-3/128/left-1024.png" width="15" class="object-center" alt="">
         </button>
-        <button class="rounded-full" @click="store.commit('increment')">
+        <button class="rounded-full" @click="store.commit('incrementWeek')">
           <img src="https://cdn4.iconfinder.com/data/icons/developer-set-3/128/left-1024.png" width="15" class="object-center rotate-180" alt="">
         </button>
         <p @click="openModal" class="text-[var(--main-color)] text-[13px]">{{ store.state.date }}</p>
