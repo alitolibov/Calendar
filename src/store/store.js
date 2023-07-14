@@ -5,7 +5,7 @@ import { createStore } from 'vuex';
 export default createStore({
     state: {
         count: 0,
-        date: moment().format('MMMM YYYY'),
+        date: moment().format('MMMM-YYYY'),
         selectedDay: {
             day: Number,
             index: Number,
@@ -13,6 +13,7 @@ export default createStore({
             month: String,
             week: String,
             year: Number},
+        isTrue: false
     },
     mutations: {
         increment(state) {
@@ -27,18 +28,31 @@ export default createStore({
             state.selectedDay = payload
         },
         incrementWeek(state) {
+           if(state.isTrue) {
             let a = moment([state.selectedDay.year, +state.selectedDay.month - 1, state.selectedDay.day]).add(1, 'week').format('YYYY-M-DD')
             let b = a.split('-')
             state.selectedDay.year = +b[0]
             state.selectedDay.month = b[1]
             state.selectedDay.day = +b[2]
+           } else {
+            state.count++
+            state.date = moment().add(state.count, 'month').format("MMMM YYYY")
+           }
         },
         decrementWeek(state) {
-            let a = moment([state.selectedDay.year, +state.selectedDay.month - 1, state.selectedDay.day]).subtract(1, 'week').format('YYYY-M-DD')
-            let b = a.split('-')
-            state.selectedDay.year = +b[0]
-            state.selectedDay.month = b[1]
-            state.selectedDay.day = +b[2]
+            if(state.isTrue) {
+                let a = moment([state.selectedDay.year, +state.selectedDay.month - 1, state.selectedDay.day]).subtract(1, 'week').format('YYYY-M-DD')
+                let b = a.split('-')
+                state.selectedDay.year = +b[0]
+                state.selectedDay.month = b[1]
+                state.selectedDay.day = +b[2]
+            } else {
+                state.count--
+                state.date = moment().add(state.count, 'month').format("MMMM YYYY")
+            }
         },
+        isTrue(state) {
+            state.isTrue = true
+        }
     }
 })

@@ -15,7 +15,7 @@
             <p class="w-fit text-[grey] text-center text-[11px]" v-for="(weekName, index) in weekNames" :key="index">
             {{ weekName }}
             </p>
-            <div class="max-w-[20px] p-[2px] duration-200 rounded-full" :style="date.isActive ? {background: 'rgb(59 130 246 / 1', color: 'white'} : ''" :class="{'text-white bg-blue-300': date.day === store.state.selectedDay.day}"  @click="date.day !== '' ? store.commit('addSelectedDay', date) : null" v-for="(date, index) in arrayDays" :key="index">
+            <div class="max-w-[20px] p-[2px] duration-200 rounded-full" :style="date.isActive ? {background: 'rgb(59 130 246 / 1', color: 'white'} : ''" :class="{'text-white bg-blue-300': date.day === store.state.selectedDay.day && date.month === store.state.selectedDay.month && date.year === store.state.selectedDay.year}"  @click="validate(date)" v-for="(date, index) in arrayDays" :key="index">
                 <p class="text-center text-[11px]">
                 {{ date.day }}
                 </p>
@@ -34,21 +34,17 @@
     arrayDays = ref(),
     date = ref(store.state.date),
     todayDate = moment().date(),
-    today = ref(),
     dateTwo = ref(moment().format('MM YYYY'));
-    let splited:String[] = date.value.split(' ')
     let splitedTwo = dateTwo.value.split(' ')
     
     
-    
-    const daysInMonth = ref(moment(`${splited[0]}-${splited[1]}`, "MMMM-YYYY").daysInMonth())
+    const daysInMonth = ref(moment(date.value, "MMMM-YYYY").daysInMonth())
     createDays(daysInMonth.value, splitedTwo[0], +splitedTwo[1])
     
     watch(() => store.state.count, (newValue) => {
         let newDateTwo = dateTwo.value = moment().add(newValue, 'month').format("MM YYYY")
-        splited = date.value.split(' ')
         splitedTwo = newDateTwo.split(' ')
-        daysInMonth.value = moment(`${splited[0]}-${splited[1]}`, "MMMM-YYYY").daysInMonth()
+        daysInMonth.value = moment(date.value, "MMMM-YYYY").daysInMonth()
         createDays(daysInMonth.value, splitedTwo[0], +splitedTwo[1])
     })
 
@@ -79,7 +75,12 @@
         arrayDays.value = arr
     }
 
-    
+    const validate = (date:object) => {
+        if(date.day !== '') {
+            store.commit('isTrue')
+            store.commit('addSelectedDay', date) 
+        } 
+    }
     </script>
 
 <style lang="scss" scoped>
