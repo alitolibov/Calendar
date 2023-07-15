@@ -24,7 +24,7 @@
             </div>
 </template>
 
-<scr2ipt setup lang="ts">    
+<script setup lang="ts">    
     import moment from 'moment';
 import {computed, reactive, ref, watch} from 'vue';
 import {useStore} from 'vuex';
@@ -145,7 +145,7 @@ const decrement = () => {
     store.commit('increment')
   }
 
-    </scr2ipt>
+    </script>
 
 <style lang="scss" scoped>
 
