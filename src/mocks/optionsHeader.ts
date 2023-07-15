@@ -1,18 +1,18 @@
 export const optionsArr:any = [
     {
-        value: 'day',
+        value: 'd',
         desc: 'День'
     }, {
-        value: 'four',
+        value: 'd',
         desc: '4 дня'
     }, {
-        value: 'week',
+        value: 'w',
         desc: 'Неделя'
     }, {
-        value: 'month',
+        value: 'M',
         desc: 'Месяц'
     }, {
-        value: 'year',
+        value: 'y',
         desc: 'Год'
     }
 ]

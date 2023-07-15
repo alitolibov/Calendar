@@ -5,7 +5,7 @@ import { createStore } from 'vuex';
 export default createStore({
     state: {
         count: 0,
-        date: moment().format('MMMM-YYYY'),
+        date: moment().format('MMMM YYYY'),
         selectedDay: {
             day: Number,
             isActive: Boolean,
@@ -15,36 +15,44 @@ export default createStore({
         isTrue: false,
     },
     mutations: {
-        increment(state) {
-            state.count++
-            state.date = moment().add(state.count, 'month').format("MMMM YYYY")
+        increment(state, payload) {
+            if(payload === 'addYear') {
+                state.date = moment().add(1, 'year').format("MMMM YYYY")
+            } else {
+                state.count++
+                state.date = moment().add(state.count, 'month').format("MMMM YYYY")
+            }
         },
         decrement(state) {
-            state.count--
-            state.date = moment().add(state.count, 'month').format("MMMM YYYY")
+            if(payload === 'subtractYear') {
+                state.date = moment().subtract(1, 'year').format("MMMM YYYY")
+            } else {
+                state.count--
+                state.date = moment().add(state.count, 'month').format("MMMM YYYY")
+            }
         },
         addSelectedDay (state, payload) {
             state.selectedDay = payload
         },
-        incrementWeek(state) {
+        incrementDays(state, payload) {
            if(state.isTrue) {
-            let a = moment([state.selectedDay.year, +state.selectedDay.month - 1, state.selectedDay.day]).add(1, 'week').format('YYYY-M-DD')
-            let b = a.split('-')
-            state.selectedDay.year = +b[0]
-            state.selectedDay.month = b[1]
-            state.selectedDay.day = +b[2]
+            let a = moment([state.selectedDay.year, +state.selectedDay.month - 1, state.selectedDay.day]).add(1, payload).format('YYYY-M-DD-d').split('-')
+            state.selectedDay.year = +a[0]
+            state.selectedDay.month = a[1]
+            state.selectedDay.day = +a[2]
+            state.selectedDay.week = +a[3]
            } else {
             state.count++
             state.date = moment().add(state.count, 'month').format("MMMM YYYY")
            }
         },
-        decrementWeek(state) {
+        decrementDays(state, payload) {
             if(state.isTrue) {
-                let a = moment([state.selectedDay.year, +state.selectedDay.month - 1, state.selectedDay.day]).subtract(1, 'week').format('YYYY-M-DD')
-                let b = a.split('-')
-                state.selectedDay.year = +b[0]
-                state.selectedDay.month = b[1]
-                state.selectedDay.day = +b[2]
+                let a = moment([state.selectedDay.year, +state.selectedDay.month - 1, state.selectedDay.day]).subtract(1, payload).format('YYYY-M-DD-d').split('-')
+                state.selectedDay.year = +a[0]
+                state.selectedDay.month = a[1]
+                state.selectedDay.day = +a[2]
+                state.selectedDay.week = +a[3]
             } else {
                 state.count--
                 state.date = moment().add(state.count, 'month').format("MMMM YYYY")
@@ -57,12 +65,14 @@ export default createStore({
             state.isTrue = false
         },
         returnToday(state) {
+            state.count = 0
             state.date = moment().format('MMMM-YYYY')
-            let split = moment().format('MMMM-YYYY-DD-d').split('-')
+            let split = moment().format('MM-YYYY-DD-d').split('-')
             state.selectedDay.year = +split[1]
             state.selectedDay.month = split[0]
             state.selectedDay.day = +split[2]
             state.selectedDay.week = +split[3]
+            console.log(state.selectedDay);
         }
     }
 })

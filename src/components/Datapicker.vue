@@ -38,10 +38,10 @@ const weekNames: string[] = [
     'Fri',
     'San'
 ];
-const store = useStore();
-const arrayDays = ref<any[]>([]);
-const todayDate = moment().date();
-const dateTwo = ref(moment().format('MM YYYY'));
+const store = useStore(),
+arrayDays = ref<any[]>([]),
+todayDate = moment().date(),
+dateTwo = ref(moment().format('MM YYYY'));
 let splitedTwo = dateTwo
     .value
     .split(' ');
@@ -89,17 +89,15 @@ function createDays(days : number, month : string, year : number) {
     arrayDays.value = arr;
 }
 
-const validate = (date : {
-    day: string
-}) => {
+const validate = (date : {day: string}) => {
     if (date.day !== '') {
         store.commit('isTrue');
         store.commit('addSelectedDay', date);
     }
 };
 
-watch(() => store.state.selectedDay.month, (newValue) => {
-    if (store.state.selectedDay.year === +splitedTwo[1]) {
+watch([() => store.state.selectedDay.month, () => store.state.selectedDay.year], ([newValue, newValueYear]) => {    
+    if (newValueYear === +splitedTwo[1]) {
         if (newValue > +splitedTwo[0]) {
             store.commit('increment');
             dateTwo.value = moment()
@@ -111,16 +109,18 @@ watch(() => store.state.selectedDay.month, (newValue) => {
                 .subtract(1, 'month')
                 .format("MM YYYY");
         }
-    } else if (store.state.selectedDay.year > +splitedTwo[1]) {
+    } else if (newValueYear > +splitedTwo[1]) {
         dateTwo.value = moment()
             .add(1, 'year')
             .format("MM YYYY");
-        store.commit('increment');
-    } else if (store.state.selectedDay.year < +splitedTwo[1]) {
+            store.commit('increment', 'addYear');
+            console.log(dateTwo.value);
+            
+    } else if (newValueYear < +splitedTwo[1]) {
         dateTwo.value = moment()
             .subtract(1, 'year')
             .format("MM YYYY");
-        store.commit('decrement');
+            store.commit('decrement', 'subtractYear');
     }
 
     if (store.state.selectedDay.year === moment().year() && newValue === moment().format('MMMM') && store.state.selectedDay.day === moment().date()) {
