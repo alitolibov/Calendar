@@ -31,6 +31,8 @@
   
   const selectOptionsArr = ref(optionsArr);
   const selected = ref('week');
+
+  
   
   </script>
   

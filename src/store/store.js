@@ -53,6 +53,9 @@ export default createStore({
         isTrue(state) {
             state.isTrue = true
         },
+        isFalse(state) {
+            state.isTrue = false
+        },
         returnToday(state) {
             state.date = moment().format('MMMM-YYYY')
             let split = moment().format('MMMM-YYYY-DD-d').split('-')
