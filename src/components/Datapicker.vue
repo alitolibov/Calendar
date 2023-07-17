@@ -11,22 +11,26 @@
         </button>
         </div>
         </div>
-        <div class="grid grid-cols-7 gap-y-[4px]">
-            <p class="w-fit text-[grey] text-center text-[11px]" v-for="(weekName, index) in weekNames" :key="index">
-            {{ weekName }}
-            </p>
-            <div class="max-w-[20px] p-[2px] duration-200 rounded-full" :style="date.isActive ? {background: 'rgb(59 130 246 / 1', color: 'white'} : ''" :class="{'text-white bg-blue-300': date.day === store.state.selectedDay.day && store.state.isTrue}"  @click="validate(date)" v-for="(date, index) in arrayDays" :key="index">
-                <p class="text-center text-[11px]">
-                {{ date.day }}
-                </p>
-            </div>
-        </div>
+        <table class='w-full'>
+            <thead class="grid grid-cols-7 gap-y-[4px]">
+                <tr v-for="(weekName, index) in weekNames" :key="index" class="w-fit text-[grey] text-center text-[11px]">
+                    {{ weekName }}
+                </tr>
+            </thead>
+            <tbody class="grid grid-cols-7 gap-y-[4px]">
+                <tr class="max-w-[20px] flex items-center p-[2px] duration-200 rounded-full" :style="date.isActive ? {background: 'rgb(59 130 246 / 1', color: 'white'} : ''" :class="{'text-white bg-blue-300': date.day === store.state.selectedDay.day && store.state.isTrue}" @click="validate(date)" v-for="(date, index) in arrayDays" :key="index">
+                    <td class="mx-auto text-[11px]">
+                        {{ date.day }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
             </div>
 </template>
 
 <script setup lang="ts">    
     import moment from 'moment';
-import {computed, reactive, ref, watch} from 'vue';
+import {ref, watch} from 'vue';
 import {useStore} from 'vuex';
 
 const weekNames: string[] = [
@@ -42,13 +46,9 @@ const store = useStore(),
 arrayDays = ref<any[]>([]),
 todayDate = moment().date(),
 dateTwo = ref(moment().format('MM YYYY'));
-let splitedTwo = dateTwo
-    .value
-    .split(' ');
+let splitedTwo = dateTwo.value.split(' ');
 
-const daysInMonth = ref(
-    moment(`${splitedTwo[0]}-${splitedTwo[1]}`, "MM-YYYY").daysInMonth()
-);
+const daysInMonth = ref(moment(`${splitedTwo[0]}-${splitedTwo[1]}`, "MM-YYYY").daysInMonth());
 createDays(daysInMonth.value, splitedTwo[0], + splitedTwo[1]);
 
 watch(() => store.state.count, (newValue) => {
@@ -56,24 +56,21 @@ watch(() => store.state.count, (newValue) => {
         dateTwo.value = moment().add(newValue, 'month').format("MM YYYY")
     );
     splitedTwo = newDateTwo.split(' ');
-    daysInMonth.value = moment(`${splitedTwo[0]}-${splitedTwo[1]}`, "MM-YYYY").daysInMonth();
+    daysInMonth.value = moment(`${splitedTwo[0]}-${splitedTwo[1]}`, "MM YYYY").daysInMonth();
     createDays(daysInMonth.value, splitedTwo[0], + splitedTwo[1]);
 });
 
 function createDays(days : number, month : string, year : number) {
     let arr: any[] = [];
     for (let i = 1; i <= days; i++) {
-        let getWeek = moment(`${year}-${month}-${i}`);
-        let dayOfWeek = getWeek.format('d');
+        let getWeek = moment(`${year}-${month}-${i}`).format('d');
 
         let obj = {
             year: year,
             month: month,
             day: i,
-            isActive: moment().month() === +splitedTwo[0] - 1 && todayDate === i && moment().year() === +splitedTwo[1]
-                ? true
-                : false,
-            week: dayOfWeek
+            isActive: moment().month() === +splitedTwo[0] - 1 && todayDate === i && moment().year() === +splitedTwo[1],
+            week: getWeek
         };
         arr.push(obj);
     }
@@ -96,31 +93,30 @@ const validate = (date : {day: string}) => {
     }
 };
 
-watch([() => store.state.selectedDay.month, () => store.state.selectedDay.year], ([newValue, newValueYear]) => {    
-    if (newValueYear === +splitedTwo[1]) {
+watch(() => store.state.selectedDay.month, (newValue) => {    
+    if (store.state.selectedDay.year === +splitedTwo[1]) {
         if (newValue > +splitedTwo[0]) {
-            store.commit('increment');
             dateTwo.value = moment()
-                .add(1, 'month')
-                .format("MM YYYY");
+            .add(1, 'month')
+            .format("MM YYYY");
+            store.commit('increment')
         } else if (newValue < +splitedTwo[0]) {
-            store.commit('decrement');
             dateTwo.value = moment()
-                .subtract(1, 'month')
-                .format("MM YYYY");
+            .subtract(1, 'month')
+            .format("MM YYYY");
+            store.commit('decrement')
         }
-    } else if (newValueYear > +splitedTwo[1]) {
+    } else if (store.state.selectedDay.year > +splitedTwo[1]) {
         dateTwo.value = moment()
             .add(1, 'year')
             .format("MM YYYY");
-            store.commit('increment', 'addYear');
-            console.log(dateTwo.value);
-            
-    } else if (newValueYear < +splitedTwo[1]) {
-        dateTwo.value = moment()
+            store.commit('increment')
+
+    } else if (store.state.selectedDay.year < +splitedTwo[1]) {
+            dateTwo.value = moment()
             .subtract(1, 'year')
             .format("MM YYYY");
-            store.commit('decrement', 'subtractYear');
+            store.commit('decrement')
     }
 
     if (store.state.selectedDay.year === moment().year() && newValue === moment().format('MMMM') && store.state.selectedDay.day === moment().date()) {
@@ -142,7 +138,7 @@ const decrement = () => {
     } else {
         store.commit('isFalse')
     }
-    store.commit('increment')
+        store.commit('increment')
   }
 
     </script>

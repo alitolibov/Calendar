@@ -15,21 +15,13 @@ export default createStore({
         isTrue: false,
     },
     mutations: {
-        increment(state, payload) {
-            if(payload === 'addYear') {
-                state.date = moment().add(1, 'year').format("MMMM YYYY")
-            } else {
-                state.count++
-                state.date = moment().add(state.count, 'month').format("MMMM YYYY")
-            }
+        increment(state) {
+            state.count++
+            state.date = moment().add(state.count, 'month').format("MMMM YYYY")
         },
         decrement(state) {
-            if(payload === 'subtractYear') {
-                state.date = moment().subtract(1, 'year').format("MMMM YYYY")
-            } else {
-                state.count--
-                state.date = moment().add(state.count, 'month').format("MMMM YYYY")
-            }
+            state.count--
+            state.date = moment().add(state.count, 'month').format("MMMM YYYY")
         },
         addSelectedDay (state, payload) {
             state.selectedDay = payload
@@ -41,6 +33,7 @@ export default createStore({
             state.selectedDay.month = a[1]
             state.selectedDay.day = +a[2]
             state.selectedDay.week = +a[3]
+            console.log(state.selectedDay);
            } else {
             state.count++
             state.date = moment().add(state.count, 'month').format("MMMM YYYY")
@@ -53,6 +46,7 @@ export default createStore({
                 state.selectedDay.month = a[1]
                 state.selectedDay.day = +a[2]
                 state.selectedDay.week = +a[3]
+                console.log(state.selectedDay);
             } else {
                 state.count--
                 state.date = moment().add(state.count, 'month').format("MMMM YYYY")
