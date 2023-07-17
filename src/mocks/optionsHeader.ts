@@ -1,12 +1,12 @@
 export const optionsArr:any = [
     {
         value: 'd',
-        desc: 'День'
+        desc: 'Day'
     }, {
         value: 'w',
-        desc: 'Неделя'
+        desc: 'Week'
     }, {
         value: 'M',
-        desc: 'Месяц'
+        desc: 'Month'
     }
 ]
